@@ -2,6 +2,7 @@ class MoviesController < ApplicationController
 
   # See Section 4.5: Strong Parameters below for an explanation of this method:
   # http://guides.rubyonrails.org/action_controller_overview.html
+  
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -13,7 +14,25 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all.order(params[:sort_by])
+    @movies = Movie.all
+    @all_ratings = []
+    @movies.each do |selectedMovie|
+      if @all_ratings == []
+        @all_ratings.push(selectedMovie.rating)
+      else
+        alreadyAdded = false
+        @all_ratings.each do |selectedRating|
+          if selectedRating == selectedMovie.rating 
+            alreadyAdded = true
+          end
+        end
+        if !alreadyAdded
+          @all_ratings.push(selectedMovie.rating)
+        end
+      end
+    end
+    @all_ratings.sort!
+    @movies = @movies.filterByRating(params[:ratings]).order(params[:sort_by])
   end
 
   def new
