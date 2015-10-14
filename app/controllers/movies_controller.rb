@@ -34,7 +34,10 @@ class MoviesController < ApplicationController
     @all_ratings.sort!
     if params[:ratings] == nil
       if session[:ratings] == nil
-        session[:ratings]  = all_ratings
+        session[:ratings] = {}
+        @all_ratings.each do |eachRating|
+          session[:ratings].merge!({eachRating => "1"})
+        end
       end
       params[:ratings] = session[:ratings]
     end
