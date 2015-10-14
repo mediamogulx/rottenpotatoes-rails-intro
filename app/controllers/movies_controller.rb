@@ -33,6 +33,9 @@ class MoviesController < ApplicationController
     end
     @all_ratings.sort!
     if params[:ratings] == nil
+      if session[:ratings] == nil
+        session[:ratings]  = all_ratings
+      end
       params[:ratings] = session[:ratings]
     end
       @movies = @movies.filterByRating(params[:ratings])
