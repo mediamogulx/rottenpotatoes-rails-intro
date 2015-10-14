@@ -32,7 +32,17 @@ class MoviesController < ApplicationController
       end
     end
     @all_ratings.sort!
-    @movies = @movies.filterByRating(params[:ratings]).order(params[:sort_by])
+    if params[:ratings] == nil
+      params[:ratings] = session[:ratings]
+    end
+      @movies = @movies.filterByRating(params[:ratings])
+    if params[:sort_by] == nil
+      params[:sort_by] = session[:sort_by]
+    end
+    @movies = @movies.order(params[:sort_by])
+    session[:ratings] = params[:ratings]
+    session[:sort_by] = params[:sort_by]
+    @selected_ratings = session[:ratings]
   end
 
   def new
